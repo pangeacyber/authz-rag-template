@@ -10,7 +10,7 @@ export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse,
   ) {
-    const resp = await axios.get(`https://${process.env.CF_WORKERS_HOST}/get-docs`);
+    const resp = await axios.get(`${process.env.CF_WORKERS_HOST}/get-docs`);
     const documents = resp.data;
 
     await Promise.all(documents.map(async doc => {

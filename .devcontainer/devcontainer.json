@@ -1,0 +1,26 @@
+{
+    "image": "mcr.microsoft.com/vscode/devcontainers/javascript-node:20",
+    "hostRequirements": {
+    "cpus": 4
+    },
+    "waitFor": "onCreateCommand",
+    "postCreateCommand": "",
+    "postAttachCommand": {
+    "server": "npm run dev"
+    },
+    "customizations": {
+    "codespaces": {
+        "openFiles": [
+        "README.md",
+        ".env.example"
+        ]
+    }
+    },
+    "portsAttributes": {
+    "3000": {
+        "label": "Application",
+        "onAutoForward": "openPreview"
+    }
+    },
+    "forwardPorts": [3000]
+}
