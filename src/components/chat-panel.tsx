@@ -47,7 +47,8 @@ export function ChatPanel({user, getToken, logout}) {
         <div className="flex flex-col border-r bg-muted/40 overflow-auto">
         <div className="flex items-center justify-between border-b p-4">
           <div className="flex items-center gap-2">
-            <div className="font-medium">Secure RAG Chatbot</div>
+            {/* <div className="font-medium">Secure RAG Chatbot</div> */}
+            <div className="font-medium">User ID: {user?.active_token?.identity}</div>
           </div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -57,7 +58,7 @@ export function ChatPanel({user, getToken, logout}) {
             </DropdownMenuTrigger>
             <Button onClick={() => {setMessages([])}}>Clear Chat</Button>
             <DropdownMenuContent align="end">
-              {/* <DropdownMenuItem><ViewProfileForm /></DropdownMenuItem> */}
+              {/* <DropdownMenuItem>User ID: {user?.active_token?.identity}</DropdownMenuItem> */}
               <DropdownMenuItem onClick={logout}>Logout</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
