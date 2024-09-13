@@ -38,10 +38,10 @@ export function DocumentSection() {
                 <AccordionTrigger className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <FileIcon className="w-4 h-4" />
-                      <div>{doc.filename}</div>
+                      <div>{doc.id} {doc.filename}</div>
                     </div>
                     <div className="flex gap-2">
-                      {doc.category.map(cat => (
+                      {doc?.category?.map(cat => (
                         <Badge variant="secondary">{cat}</Badge>
                       ))}
                     </div>
