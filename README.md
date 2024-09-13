@@ -1,8 +1,41 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Secure RAG Chatbot Template with Pangea AuthZ
+
+![./assets/pangea-rag-authz-diagram.png](assets/pangea-rag-authz-diagram.png)
+This template demonstrates how you can build an secure RAG pipeline with robust access control and is built using [Next.js](https://nextjs.org), [Cloudflare Workers AI](https://ai.cloudflare.com), and [Pangea AuthZ](https://pangea.cloud/services/authz?utm_source=github&utm_medium=authz-rag-template)
+
+Note: the LLM and vector DB can be swapped out and exists in the `workers` repo.
+
+## Current Problem with RAG
+Chatbots using LLMs are great at giving users responses with contextual information. Architectures such as Retrieval Augmented Generation (RAG) pipelining further allow chatbots to access real-time and more fine-grained contexts using tools like vector searching through vector-embedded documents. However, when using tools like vector search to improve our chatbot responses, it is hard to ensure that the contextual information obtained by these RAG pipelines is authorized for the eyes of every user. This problem enables malicious actors to gain unauthorized access to contextual information pulled from unauthorized sensitive company documents.
+
+## How Does Pangea AuthZ Help?
+Pangea AuthZ allows us to add ReBAC and RBAC authorization in any application or architecture - including chatbots and LLMs. Using Pangea AuthZ, we can classify every document from our data store with an access level using Pangea’s robust authorization schema. 
+Once we’ve classified all documents with appropriate access levels, we can now securely perform checks during inference (runtime) to check if a user requesting information from a chatbot or LLM has access to a required document. In RAG pipelines, during inference (runtime) the user prompt is sent to a vector DB to run a vector search finding the most relevant document to add as context to the prompt. Since each document in the vector store is classified in Pangea AuthZ with an access level, we can seamlessly check if the user can access that particular document using Pangea’s ReBAC authorization models and decide to allow or deny that user request.
+
 
 ## Getting Started
+* Pre-req checks
+* RAG setup
 
-First, run the development server:
+## Pre-req checks
+To spin up this template, you will need:
+* Pangea Account
+* Cloudflare Account (only if you are using Cloudflare LLMs + Vector DB + SQL DB)
+* Node.js (if you're using GitHub codespaces, you won't need to install this)
+
+## RAG Setup
+In this section, we will use Cloudflare Workers AI to setup our RAG pipeline using Cloudflare Vectorize (Vector DB), Llama 3.1 (LLM) and Cloudflare D1 (SQL DB).
+
+Note: Since Cloudflare Vectorize is in beta, you will need a paid account. Additionally you can also use any LLM, Vector DB and SQL DB; however, you will have to rewrite `workers` folder logic to match your tech stack of choice.
+
+### 1. Create a Cloudflare Account
+Visit [ai.cloudflare.com](https://ai.cloudflare.com) and signup using the `Getting Started` button.
+
+### 2. Install the Wrangler CLI
+Note: If you're running this demo in a GitHub codespace, you can skip this step.
+
+### 3. Create 
+If you are 
 
 ```bash
 npm run dev

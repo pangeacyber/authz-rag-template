@@ -36,17 +36,135 @@ const formSchema = z.object({
 
 
 export function NewDocumentForm({getDocs}) {
+  const [categoryList, setCategoryList] = useState([]);
+  const [value, setValue] = useState([]);
+  const { toast } = useToast();
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      filename: "",
+      text: "",
+      category: []
+    }
+  })
+
+  useEffect(() => {
+    console.log(value);
+  }, [value])
+
+  // Fetch document categories from Pangea AuthZ
+  const getCategories = async () => {
+    const resp = await axios.get("/api/get-categories");
+    const categories = resp.data;
+
+    setCategoryList(categories);
+  }
+
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+
+    values.category = value;
+    console.log(values);
+
+    const resp = await axios.post("/api/add-doc", values);
+
+    if (resp.status === 200) {
+      console.log(resp.data);
+      toast({
+        title: "Document Successfully Added",
+        description: "success"
+      })
+      form.reset();
+      setValue([]);
+      getDocs();
+    }
+  }
 
   return (
     <Dialog>
-      <DialogTrigger asChild>
+      <DialogTrigger asChild onClick={getCategories}>
           <Button variant="outline">
             <PlusIcon className="w-4 h-4 mr-2" />
             New Document
           </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
-        
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)}>
+            <DialogHeader>
+              <DialogTitle>New Document</DialogTitle>
+              <DialogDescription>
+                Add a new document. Click Save when you're done.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="grid gap-4 py-4">
+
+            <FormField control={form.control} name="filename" render={({field}) => (
+                <FormItem className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="filename" className="text-right">
+                    Filename
+                  </Label>
+                  <FormControl>
+                    <Input
+                      id="filename"
+                      placeholder="john-medical-records.md"
+                      className="col-span-3"
+                      {...field}
+                    />
+                  </FormControl>
+                </FormItem>
+              )} />
+            <FormField control={form.control} name="text" render={({field}) => (
+                <FormItem className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="text" className="text-right">
+                    Document Contents
+                  </Label>
+                  <FormControl>
+                    <Textarea
+                      id="text"
+                      placeholder={`# Medical History - John Doe \n\n Chronic Conditions:\n ....`}
+                      className="col-span-3"
+                      {...field}
+                    />
+                  </FormControl>
+                </FormItem>
+              )} />
+
+            <FormField control={form.control} name="category" render={({field}) => (
+              <FormItem className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="text" className="text-right">
+                  Document Contents
+                </Label>
+                <FormControl>
+
+                <MultiSelector
+                    values={value}
+                    onValuesChange={setValue}
+                    loop
+                    className="col-span-3"
+                    // {...field}
+                  >
+                    <MultiSelectorTrigger>
+                      <MultiSelectorInput placeholder="Select categories" />
+                    </MultiSelectorTrigger>
+                    <MultiSelectorContent 
+                    >
+                      <MultiSelectorList>
+                        {categoryList.map(category => (
+                          <MultiSelectorItem value={category}>{category}</MultiSelectorItem>
+                        ))}
+                      </MultiSelectorList>
+                    </MultiSelectorContent>
+                </MultiSelector>
+              </FormControl>
+            </FormItem>
+              )} />
+            </div>
+            <DialogFooter>
+              <Button type="submit">Add Document</Button>
+            </DialogFooter>
+          </form>
+        </Form>
       </DialogContent>
     </Dialog>
   )
