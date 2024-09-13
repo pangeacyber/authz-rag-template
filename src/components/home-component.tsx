@@ -26,11 +26,11 @@ export function HomeComponent({login}) {
       <div className="max-w-md px-4 py-12 sm:px-6 lg:px-8">
         <div className="space-y-4 text-center">
           <div className="inline-block rounded-lg bg-muted px-3 py-1 text-sm font-medium text-primary">
-            Welcome to Pango Bank
+            Welcome to Galaxy Wars ⚔️
           </div>
           <h1 className="text-4xl font-bold tracking-tight text-[#9b59b6] sm:text-5xl">Banking for Pangolins</h1>
           <p className="text-muted-foreground">
-            Secure and convenient banking services tailored for the pangolin community.
+            A RAG based chat app system for your favorite ⭐️⚔️ movies (Lucas Films pls don't sue me)
           </p>
           <Button
             className="inline-flex items-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow-sm transition-colors hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
