@@ -11,7 +11,7 @@ export default async function handler(
   res: NextApiResponse,
 ) {
     if (req.headers["user-token"] && req.body.messages) {
-      const response: AxiosResponse = await axios.post(`http://localhost:8787/chat`, {
+      const response: AxiosResponse = await axios.post(`${process.env.CF_WORKERS_HOST}/chat`, {
         messages: req.body.messages
       }, {
         headers: {
