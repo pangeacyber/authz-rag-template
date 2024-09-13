@@ -19,55 +19,53 @@ Once we’ve classified all documents with appropriate access levels, we can now
 
 ## Pre-req checks
 To spin up this template, you will need:
-* Pangea Account
-* Cloudflare Account (only if you are using Cloudflare LLMs + Vector DB + SQL DB)
+* [Pangea Account](https://console.pangea.cloud/?utm_soruce=github&utm_medium=authz-rag-template-repo)
 * Node.js (if you're using GitHub codespaces, you won't need to install this)
 
 ## RAG Setup
-In this section, we will use Cloudflare Workers AI to setup our RAG pipeline using Cloudflare Vectorize (Vector DB), Llama 3.1 (LLM) and Cloudflare D1 (SQL DB).
+Visit the [`workers/`](./workers) ReadMe to learn how to setup the Cloudflare worker.
 
-Note: Since Cloudflare Vectorize is in beta, you will need a paid account. Additionally you can also use any LLM, Vector DB and SQL DB; however, you will have to rewrite `workers` folder logic to match your tech stack of choice.
+Note, if you're bringing your own RAG setup you won't need to do this.
+For the AWS GenAI Loft workshop, you won't need to set this up.
 
-### 1. Create a Cloudflare Account
-Visit [ai.cloudflare.com](https://ai.cloudflare.com) and signup using the `Getting Started` button.
+## Enable Pangea AuthZ
+1. Create a new [Pangea Account](https://console.pangea.cloud/?utm_soruce=github&utm_medium=authz-rag-template-repo)
+![Pangea Signup Screenshot](./assets/pangea-signup.png)
 
-### 2. Install the Wrangler CLI
-Note: If you're running this demo in a GitHub codespace, you can skip this step.
+2. Once you land on the Pangea User Console, You can see AuthZ, and AuthN on the left.
 
-### 3. Create 
-If you are 
+3. Select AuthN to enable and begin the token creation process. While creating the token, you can enable it for all the services we are going to require for this application: AuthZ and AuthN.
 
-```bash
+4. Landing on the AuthN Service Overview page you'll see all the token information you will need from Pangea to run the application. Copy these values into a note pad or keep this page open.
+
+5. Go to the Redirects tab and add the necessary redirect. If running this in codespace, you can use the wildcard codespaces redirect URL `*.app.github.dev/*` (Note: ONLY for development purposes). If running this app locally, add http://localhost:3000 to the redirect list. This is also go to a good time to go to General Settings and decide what methods of Login or MFA you need for your application. On first run it is recommended to do this in a bare bones way.
+
+![Pangea AuthN Redirect Setup](./assets/authn-redirect-setup.png)
+
+## First Run
+Copy the `.env.example` file to a file called `.env.local` to setup all the necessary local environment variables.
+
+Copy the appropriate values into the `.env.local` file.
+- Pangea Token
+- Pangea Domain
+- Pangea AuthN Client Token
+- Pangea Client Token
+
+Let's run the development server:
+```
 npm run dev
 # or
 yarn dev
 # or
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000 with your browser to see the result.
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+## AuthZ Setup
+Please refer to the [Panega Docs](https://pangea.cloud/docs/authz/?utm_source=github&utm_medium=authz-rag-template-repo) to setup AuthZ using our [Quickstart Guide](https://pangea.cloud/docs/authz/?utm_source=github&utm_medium=authz-rag-template-repo).
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+Note: Docs for setting up AuthZ for demos in this particular template are currently a work in progress.
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
-
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## Contribution / Issues
+If you have trouble setting this template up, feel free to raise a GitHub issue on this repo or report it on the [Pangea Community](https://community.pangea.cloud/?utm_source=github&utm_medium=authz-rag-template-repo) and we'll help you fix it.
