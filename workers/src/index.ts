@@ -173,4 +173,71 @@ const checkAuthZ = async (env: any, token: string, docId: string) => {
     }
 }
 
+
+app.get('/', async (c) => {
+  const question = c.req.query('text') || "What is the square root of 9?"
+
+  const embeddings = await c.env.AI.run('@cf/baai/bge-base-en-v1.5', { text: question })
+  const vectors = embeddings.data[0]
+
+  const SIMILARITY_CUTOFF = 0.75
+  const vectorQuery = await c.env.VECTOR_INDEX.query(vectors, { topK: 1 });
+  const vecIds = vectorQuery.matches
+    .filter(vec => vec.score > SIMILARITY_CUTOFF)
+    .map(vec => vec.id)
+
+  let manuals = []
+  let restrictedManuals = []
+  let isUnauthorized = false;
+
+  
+  if (vecIds.length) {
+    const query = `SELECT * FROM manuals WHERE id IN (${vecIds.join(", ")})`
+    const { results } = await c.env.DB.prepare(query).bind().all()
+
+
+    if (results) manuals = results.map(vec => ({ access_level: vec.access_level, text: vec.text, id: vec.id }))
+	if (manuals) restrictedManuals = await Promise.all(manuals.map(async doc => {
+		const authzCheck = await checkAuthZ(c, doc.access_level, "pranav");
+		if (authzCheck) {
+			return doc
+		} else {
+			console.log("Unauthorized Access!");
+			isUnauthorized = true;
+			return { access_level: doc.access_level, text: "unauthorized", id: null }
+		}
+	}))
+  }
+
+  console.log(manuals, restrictedManuals)
+
+  const contextMessage = restrictedManuals.length
+    ? `Context:\n${restrictedManuals.map(doc => `- ${doc.text}`).join("\n")}`
+    : ""
+  console.log(contextMessage)
+
+  const systemPrompt = `You are a bot that answers questions in the Starwars galactic empire. You are a fictional bot.
+  When answering the question or responding, use the context provided, if it is provided and relevant.
+  If the context is "Unauthorized Access!" then respond with "Unauthorized Access! This infraction will be reported to the Sith Lord."`
+
+  if(isUnauthorized) {
+		const response = "Unauthorized Access! This infraction will be reported to the Sith Lord.";
+		return c.text(response);
+  } else {
+		const { response: answer } = await c.env.AI.run(
+			'@cf/meta/llama-3-8b-instruct',
+			{
+			messages: [
+				...(manuals.length ? [{ role: 'system', content: contextMessage }] : []),
+				{ role: 'system', content: systemPrompt },
+				{ role: 'user', content: question }
+			]
+			}
+		)
+
+		return c.text(`${answer}\nSource: ${restrictedManuals.length > 0 ? restrictedManuals.map(doc => doc.id != null ? doc.id.toString() : "None").join(", ") : "None"}`);
+}
+})
+
+
 export default app;

@@ -133,7 +133,7 @@ export function NewDocumentForm({getDocs}) {
             <FormField control={form.control} name="category" render={({field}) => (
               <FormItem className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="text" className="text-right">
-                  Document Contents
+                  Document Categories
                 </Label>
                 <FormControl>
 
