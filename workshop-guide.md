@@ -14,7 +14,7 @@ Note: the `/add-docs` route has been disabled in the cloudflare worker API given
 ---
 ## ReBAC Demo
 ### Important links / resources
-Quickstart Environment Variables (`.env.local` file) for demo can be accessed [here]()
+Quickstart Environment Variables (`.env.local` file) for demo can be accessed [here](https://l.pangea.cloud/SQfs0Kp)
 
 #### Miscellaneous notes
 Note: the `/add-docs` route has been disabled in the cloudflare worker API given to you in the `.env.local` file to prevent unauthorized use.
