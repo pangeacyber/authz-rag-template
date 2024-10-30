@@ -4,7 +4,7 @@ import { CheckAuthZ } from './authz';
 
 const app = new Hono()
 
-app.post('/add-manual', async (c) => {
+app.post('/add-docs', async (c) => {
 	const { filename, text, category } = await c.req.json()
 	if (!text) {
 		return c.text("Missing text", 400);
@@ -41,7 +41,7 @@ app.post('/add-manual', async (c) => {
 	  }
 	])
   
-	return c.json({ id, text, category, inserted })
+	return c.json({ id, filename, text, category, inserted })
 })
 
 app.get("/get-docs", async (c) => {
