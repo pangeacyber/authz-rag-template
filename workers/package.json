@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "deploy": "wrangler deploy",
-    "dev": "wrangler dev",
-    "start": "wrangler dev",
+    "dev": "wrangler dev --remote",
+    "start": "wrangler dev --remote",
     "test": "vitest",
     "cf-typegen": "wrangler types"
   },
@@ -14,11 +14,12 @@
     "@cloudflare/workers-types": "^4.20240815.0",
     "typescript": "^5.5.2",
     "vitest": "1.5.0",
-    "wrangler": "^3.60.3"
+    "wrangler": "^3.83.0"
   },
   "dependencies": {
     "ai": "^3.3.30",
     "axios": "^1.7.7",
+    "pangea-node-sdk": "^4.1.0",
     "workers-ai-provider": "^0.0.10"
   }
 }

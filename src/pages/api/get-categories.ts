@@ -20,17 +20,22 @@ const getCategories = async () => {
 
     let categoryList: Set<string> = new Set([]);
 
-    const docCategory = await authz.tupleList({
-        filter: {
-            resource_type: "category"
-        }
-    })
+    if (process.env.AUTHZ_MODE != "RBAC") {
+        const docCategory = await authz.tupleList({
+            filter: {
+                resource_type: "category"
+            }
+        })
 
-    docCategory.result.tuples.map(tuple => {
-        if(tuple.resource) {
-            categoryList.add(tuple.resource.id as string);
-        }
-    })
+        docCategory.result.tuples.map(tuple => {
+            if(tuple.resource) {
+                categoryList.add(tuple.resource.id as string);
+            }
+        })
+    } else {
+        // Hardcoded for RBAC mode because no way to get Resources from AuthZ
+        categoryList = new Set(["operations", "financial_records", "customer_data", "compliance", "faqs"]);
+    }
 
     return Array.from(categoryList);
 }

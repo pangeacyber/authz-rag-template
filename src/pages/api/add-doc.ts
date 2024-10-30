@@ -16,23 +16,34 @@ export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse,
   ) {
-    const resp = await axios.post(`${process.env.CF_WORKERS_HOST}/add-docs`, {
-        filename: req.body.filename,
-        text: req.body.text
-    });
 
-    let docId;
-    console.log(resp.data);
+    let resp;
+    if (process.env.AUTHZ_MODE != "RBAC") {
+        resp = await axios.post(`${process.env.CF_WORKERS_HOST}/add-docs`, {
+            filename: req.body.filename,
+            text: req.body.text
+        });
+    } else {
+        resp = await axios.post(`${process.env.CF_WORKERS_HOST}/add-docs`, {
+            filename: req.body.filename,
+            text: req.body.text,
+            category: req.body.category
+        });
+    }
 
     if(resp.status === 200) {
+        let docId;
+        console.log(resp.data);
         docId = resp.data.id;
-
-        try {
-            const addedStatus = await addDocToCategory(docId, req.body.category);
-            return res.status(200).json(addedStatus);
-        } catch (err) {
-            return res.status(502).json({"error": "adding AuthZ policies to doc failed."})
-        }
+        if (process.env.AUTHZ_MODE != "RBAC") {
+            // Add document ID in an AuthZ tuple only for REBAC mode
+            try {
+                const addedStatus = await addDocToCategory(docId, req.body.category);
+                return res.status(200).json(addedStatus);
+            } catch (err) {
+                return res.status(502).json({"error": "adding AuthZ policies to doc failed."})
+            }
+    } 
     } else {
         return res.status(502).json({"error": "couldn't post document to cloudflare worker."})
     }

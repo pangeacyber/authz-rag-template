@@ -22,7 +22,7 @@ export default async function handler(
         }))
     } else {
         documents.map(doc => {
-            doc.category = [doc.access_level];
+            doc.category = [doc.metadata_category];
         })
     }
 
