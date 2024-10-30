@@ -23,10 +23,10 @@ To spin up this template, you will need:
 * Node.js (if you're using GitHub codespaces, you won't need to install this)
 
 ## RAG Setup
-Visit the [`workers/`](./workers) ReadMe to learn how to setup the Cloudflare worker.
+Visit the [`workers/rbac/`](./workers/rbac/) ReadMe to learn how to setup the Cloudflare worker.
 
 Note, if you're bringing your own RAG setup you won't need to do this.
-For the AWS GenAI Loft workshop, you won't need to set this up.
+For the RAG workshop, you won't need to set this up.
 
 ## Enable Pangea AuthZ
 1. Create a new [Pangea Account](https://console.pangea.cloud/?utm_soruce=github&utm_medium=authz-rag-template-repo)
